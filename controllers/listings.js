@@ -2,32 +2,51 @@ const Listing=require("../models/listing.js")
 const getCoordinates = require("../utils/geocode");
 
 
-module.exports.index=async(req,res)=>{
+module.exports.index = async (req, res) => {
 
-    const {q}=req.query;
+    const { q, category } = req.query;
+
+    let filter = {};
+
+    // Category filter
+    if (
+        category &&
+        category !== "" &&
+        category !== "Trending"
+    ) {
+        filter.category = category;
+    }
+
+    // Search filter
+    if (q && q.trim() !== "") {
+        filter.$or = [
+            { title: { $regex: q, $options: "i" } },
+            { location: { $regex: q, $options: "i" } },
+            { country: { $regex: q, $options: "i" } }
+        ];
+    }
 
     let allListings;
 
-    if (q && q.trim() !== "")
-    {
-        allListings= await Listing.find({
-            $or: [
-                { title: { $regex: q, $options: "i" } },
-                { location: { $regex: q, $options: "i" } },
-                { country: { $regex: q, $options: "i" } }
-            ]
-        });
+    if (category === "Trending") {
+            allListings = await Listing.find({
+                ...filter,
+                reviews: { $ne: [] }
+            }).populate("reviews");
 
-    }
-    else
-    {
-        allListings=await Listing.find({});
+            allListings.sort(
+                (a, b) => b.reviews.length - a.reviews.length
+            );
+        } else {
+        allListings = await Listing.find(filter);
     }
 
-  
-    res.render("listings/index.ejs",{allListings,q});
+    res.render("listings/index.ejs", {
+        allListings,
+        q,
+        category,
+    });
 };
-
 module.exports.renderNewForm=(req,res)=>{
     // console.log(req.user);
     

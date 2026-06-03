@@ -5,7 +5,7 @@ const initData = require("./data.js");
 const Listing = require("../models/listing.js");
 const getCoordinates = require("../utils/geocode");
 
-const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
+const dbUrl = process.env.ATLASDB_URL;
 
 main()
   .then(() => {
@@ -16,7 +16,7 @@ main()
   });
 
 async function main() {
-  await mongoose.connect(MONGO_URL);
+  await mongoose.connect(dbUrl);
 }
 
 const initDB = async () => {
@@ -35,7 +35,7 @@ const initDB = async () => {
     listings.push({
       ...listing,
 
-      owner: "6a1ff13fd4c56a10b13a55f1",
+      owner: "6a200ec5b8b69e2a9268a2ee",
 
       geometry: {
         type: "Point",

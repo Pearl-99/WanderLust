@@ -30,6 +30,22 @@ const listingSchema = new Schema({
 
     country: String,
 
+    category: {
+        type: String,
+        enum: [
+            "Trending",
+            "Rooms",
+            "Iconic Cities",
+            "Mountains",
+            "Castles",
+            "Amazing Pools",
+            "Camping",
+            "Farms",
+            "Arctic",
+        ],
+        default: "Rooms",
+    },
+
     geometry: {
         type: {
             type: String,
