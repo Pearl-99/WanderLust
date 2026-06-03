@@ -18,8 +18,6 @@ const LocalStrategy=require("passport-local");
 const User=require("./models/user.js");
 
 
-
-
 const listingRouter=require("./routes/listing.js");
 const reviewRouter=require("./routes/review.js");
 
@@ -96,19 +94,9 @@ app.use((req,res,next)=>{
     next();
 })
 
-// app.get("/",(req,res)=>{
-//     res.send("Hi i am root");
-// });
-
-// app.get("/demouser",async(req,res)=>{
-//     let fakeUser=new User({
-//         email:"student@gmail.com",
-//         username:"hiiii"
-//     });
-
-//     let registeredUser=await User.register(fakeUser,"helloWorld");
-//     res.send(registeredUser);
-// });
+app.get("/", (req, res) => {
+    res.redirect("/listings");
+});
 
 
 //Listings
